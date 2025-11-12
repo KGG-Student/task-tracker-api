@@ -19,4 +19,3 @@ class TaskResponse(BaseModel):
     status: str
     owner_email: str
     created_at: datetime
-    updated_at: datetime

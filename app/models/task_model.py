@@ -1,13 +1,10 @@
 from app.database import db
 from datetime import datetime
-from bson import ObjectId
 
 tasks_collection = db["tasks"]
 
 async def create_task(task_data: dict):
-    now = datetime.utcnow()
-    task_data["created_at"] = now
-    task_data["updated_at"] = now
+    task_data["created_at"] = datetime.utcnow()
     result = await tasks_collection.insert_one(task_data)
     return str(result.inserted_id)
 
@@ -18,15 +15,14 @@ async def get_tasks_by_owner(email: str):
     return tasks
 
 async def update_task(task_id: str, data: dict, owner_email: str):
-    data["updated_at"] = datetime.utcnow()
     result = await tasks_collection.update_one(
-        {"_id": ObjectId(task_id), "owner_email": owner_email},
+        {"_id": {"$oid": task_id}, "owner_email": owner_email},
         {"$set": data}
     )
     return result.modified_count > 0
 
 async def delete_task(task_id: str, owner_email: str):
     result = await tasks_collection.delete_one(
-        {"_id": ObjectId(task_id), "owner_email": owner_email}
+        {"_id": {"$oid": task_id}, "owner_email": owner_email}
     )
     return result.deleted_count > 0
