@@ -12,4 +12,4 @@ app.include_router(task_routes.router)
 
 @app.get("/")
 def root():
-    return {"message": "Welcome to Assignment Task Tracker API 🚀"}
+    return {"message": "Welcome to Assignment Task Tracker API"}
