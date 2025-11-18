@@ -4,7 +4,7 @@ from app.main import app
 
 @pytest.mark.asyncio
 async def test_register_and_login():
-    async with AsyncClient(base_url="http://test") as ac:
+    async with AsyncClient() as ac:
         # Register user
         register_payload = {"email": "testuser@example.com", "username": "testuser", "password": "123456"}
         reg_response = await ac.post("http://127.0.0.1:8000/api/auth/register", json=register_payload)
