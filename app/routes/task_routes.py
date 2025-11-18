@@ -21,6 +21,15 @@ async def list_my_tasks(authorization: str = Header(...)):
         return {"tasks": [], "message": "No tasks found."}
     return {"tasks": tasks}
 
+@router.get("/{task_id}", status_code=status.HTTP_200_OK)
+async def get_my_task(task_id: str, authorization: str = Header(...)):
+    user_email = get_current_user(authorization.split(" ")[1])
+    tasks = await get_tasks_by_owner(user_email)
+    task = next((t for t in tasks if str(t.get("id")) == task_id), None)
+    if not task:
+        raise HTTPException(status_code=404, detail="Task not found or unauthorized")
+    return {"task": task}
+
 @router.put("/{task_id}", status_code=status.HTTP_200_OK)
 async def update_my_task(task_id: str, task: TaskUpdate, authorization: str = Header(...)):
     user_email = get_current_user(authorization.split(" ")[1])
