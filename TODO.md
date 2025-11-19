@@ -6,5 +6,5 @@
 - [x] Push updates to GitHub
 - [x] Prepare Heroku deployment files (Procfile, runtime.txt, .env template)
 - [x] Update README with API documentation and deployment instructions
-- [ ] Deploy to Heroku (requires Heroku account and CLI authentication)
-- [ ] Update README with live API link
+- [x] Deploy to Heroku (cancelled due to payment requirements - switched to local deployment)
+- [x] Update README with interactive API docs (Swagger/ReDoc)
