@@ -1,6 +1,6 @@
 # Assignment Task Tracker API
 
-A backend web service built with FastAPI for managing tasks, authentication, and project tracking.  
+A backend web service built with FastAPI for managing tasks, authentication, and project tracking.
 Developed for ITCC14 Web Services Final Project.
 
 ## Team Members
@@ -9,125 +9,288 @@ Developed for ITCC14 Web Services Final Project.
 - Karlos Semilla (@Ykarlossemilla)
 - Jhemar Visande (@JhemarVisande)
 
-## Project Milestones
+## Project Overview
 
-### Milestone 1 (Nov Week 1): Project Setup and API Design
-What we'll do:
-This week we will finalize the Task Tracker API topic, set up the FastAPI structure, and define the initial models for Users and Tasks.
+### Problem Statement
+Teams and individuals often struggle to track their daily tasks effectively. This API aims to provide a lightweight system to manage tasks, monitor progress, and maintain accountability.
 
-Deliverables:
-- Updated README.md with project overview and problem statement
-- Created FastAPI project structure and virtual environment
-- Added initial routes and data models
-
-Checklists:
-- [x] Define project scope and core features
-- [x] Create FastAPI base app
-- [x] Add User and Task models
-- [x] Commit setup to GitHub
-
----
-
-### Milestone 2 (Nov Week 2): Authentication and Database Integration
-What we'll do:
-Implement registration, login, and JWT authentication. Connect MongoDB using Motor.
-
-Deliverables:
-- Working register and login endpoints
-- MongoDB connection established
-- Token-based authentication implemented
-
-Checklists:
-- [x] Create auth_routes.py
-- [x] Add password hashing and JWT token generation
-- [x] Test register/login with pytest
-- [x] Push updates to GitHub
-
----
-
-### Milestone 3 (Nov Week 3): Task CRUD Operations
-What we'll do:
-Build CRUD endpoints for managing tasks. Secure routes with authentication.
-
-Deliverables:
-- CRUD endpoints for tasks
-- Middleware for authentication
-- Test cases for each route
-
-Checklists:
-- [x] Implement POST, GET, PUT, DELETE
-- [x] Add authentication middleware
-- [x] Write pytest cases
-- [x] Commit and push changes
-
----
-
-### Milestone 4 (Nov Week 4): Testing and Deployment
-What we'll do:
-Run all tests, prepare documentation, and deploy API to Heroku or similar platform.
-
-Deliverables:
-- Passing tests
-- Hosted API link
-- Final README documentation
-
-Checklists:
-- [x] Complete tests
-- [x] Deploy API (prepared deployment files)
-- [ ] Update README with live link
-
----
-
-### Milestone 5 (Dec Week 1): Final Presentation and Documentation
-What we'll do:
-Prepare slides, finalize API documentation, and present the project.
-
-Deliverables:
-- Presentation slides
-- API documentation
-- Summary of lessons learned
-
-Checklists:
-- [ ] Finalize slides
-- [ ] Present project
-- [ ] Archive final version on GitHub
-
----
-
-## Problem Statement
-Teams and individuals often struggle to track their daily tasks effectively.  
-This API aims to provide a lightweight system to manage tasks, monitor progress, and maintain accountability.
-
-## Goals
+### Goals
 - Implement a secure authentication system using JWT
 - Provide CRUD operations for task management
 - Ensure a simple and reliable backend for future frontend integration
 
-## API Endpoints
+## API Documentation
 
-### Authentication
-- `POST /api/auth/register` - Register a new user
-- `POST /api/auth/login` - Login and get JWT token
+### Authentication Endpoints
 
-### Tasks (Protected)
-- `POST /api/tasks/` - Create a new task
-- `GET /api/tasks/` - List all tasks for the authenticated user
-- `GET /api/tasks/{task_id}` - Get a specific task
-- `PUT /api/tasks/{task_id}` - Update a task
-- `DELETE /api/tasks/{task_id}` - Delete a task
+#### Register User
+```
+POST /api/auth/register
+Content-Type: application/json
 
-## Deployment
+{
+  "email": "user@example.com",
+  "username": "username",
+  "password": "password"
+}
+```
 
-The API is prepared for deployment on Heroku with the following files:
-- `Procfile` - Defines the web process
-- `runtime.txt` - Specifies Python version
-- `requirements.txt` - Lists all dependencies
+#### Login User
+```
+POST /api/auth/login
+Content-Type: application/json
 
-To deploy:
-1. Create a Heroku account and install Heroku CLI
-2. Run `heroku create your-app-name`
-3. Set environment variables (e.g., `MONGODB_URL`, `SECRET_KEY`)
-4. Run `git push heroku main`
-5. The API will be live at `https://your-app-name.herokuapp.com`
+{
+  "email": "user@example.com",
+  "password": "password"
+}
+```
 
-Repository: https://github.com/Ka1ma/task-tracker-api
+Response:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "bearer"
+}
+```
+
+### Task Endpoints
+
+All task endpoints require authentication. Include the JWT token in the Authorization header:
+```
+Authorization: Bearer <your_jwt_token>
+```
+
+#### Create Task
+```
+POST /api/tasks/
+Content-Type: application/json
+
+{
+  "title": "Task Title",
+  "description": "Task description",
+  "completed": false,
+  "due_date": "2024-12-31"
+}
+```
+
+#### List Tasks
+```
+GET /api/tasks/
+```
+
+Response:
+```json
+{
+  "tasks": [
+    {
+      "id": "task_id",
+      "title": "Task Title",
+      "description": "Task description",
+      "completed": false,
+      "due_date": "2024-12-31",
+      "owner_email": "user@example.com",
+      "created_at": "2024-11-15T10:00:00"
+    }
+  ]
+}
+```
+
+#### Get Task Details
+```
+GET /api/tasks/{task_id}
+```
+
+#### Update Task
+```
+PUT /api/tasks/{task_id}
+Content-Type: application/json
+
+{
+  "title": "Updated Title",
+  "completed": true
+}
+```
+
+#### Delete Task
+```
+DELETE /api/tasks/{task_id}
+```
+
+## Setup Instructions
+
+### Backend Setup
+
+1. Clone the repository:
+```bash
+git clone https://github.com/Ka1ma/Assignment-Task-Tracker-API.git
+cd Assignment-Task-Tracker-API
+```
+
+2. Create and activate virtual environment:
+```bash
+python3 -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+```
+
+3. Install backend dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+4. Set up environment variables:
+Create a `.env` file in the root directory:
+```
+MONGODB_URL=your_mongodb_connection_string
+DATABASE_NAME=tasktracker
+SECRET_KEY=your_secret_key_here
+```
+
+5. Run the backend API:
+```bash
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
+```
+
+The API will be available at `http://127.0.0.1:8000`
+
+### Frontend Setup
+
+1. Install frontend dependencies:
+```bash
+cd frontend
+pip install -r requirements.txt
+```
+
+2. Run the Streamlit frontend:
+```bash
+cd frontend
+streamlit run app.py
+```
+
+The frontend will be available at `http://localhost:8501`
+
+## Application Features
+
+### Backend API Features
+
+- **Authentication**: Secure JWT-based authentication system
+- **Task Management**: Complete CRUD operations for tasks
+- **API Documentation**: Interactive Swagger UI for testing endpoints
+- **MongoDB Integration**: Scalable database solution
+
+### Frontend Features
+
+- **User Authentication**: Registration and login forms with JWT token storage
+- **Task Dashboard**: View all tasks with status indicators
+- **Task Management**: Create, edit, update status, and delete tasks
+- **Responsive Design**: Clean Streamlit UI components
+- **Session Management**: Secure token storage and logout functionality
+
+## API Documentation with Swagger
+
+When the backend server is running, visit the Swagger UI for interactive API documentation:
+
+- Swagger UI: http://127.0.0.1:8000/docs
+
+You can test all API endpoints directly from the browser using the Swagger interface.
+
+## Testing the Application
+
+### Using the Streamlit Frontend
+
+The easiest way to test the application is through the Streamlit frontend, which provides a complete user interface for all functionality:
+
+1. Register a new account
+2. Login with your credentials
+3. Create, view, update, and delete tasks
+4. Test error handling with invalid inputs
+5. Verify session management by logging out and back in
+
+### Using Postman (for API Testing)
+
+For direct API testing, use Postman with the following endpoints:
+
+#### Authentication Collection
+- POST /api/auth/register
+- POST /api/auth/login
+
+#### Task Management Collection
+- POST /api/tasks/ (requires Bearer token)
+- GET /api/tasks/ (requires Bearer token)
+- GET /api/tasks/{task_id} (requires Bearer token)
+- PUT /api/tasks/{task_id} (requires Bearer token)
+- DELETE /api/tasks/{task_id} (requires Bearer token)
+
+## Testing
+
+Run the test suite:
+```bash
+pytest tests/test_api.py -v
+```
+
+## Project Milestones
+
+### Milestone 1 (Nov Week 1): Project Setup and API Design
+- Updated README.md with project overview and problem statement
+- Created FastAPI project structure and virtual environment
+- Added initial routes and data models
+
+### Milestone 2 (Nov Week 2): Authentication and Database Integration
+- Working register and login endpoints
+- MongoDB connection established
+- Token-based authentication implemented
+
+### Milestone 3 (Nov Week 3): Task CRUD Operations
+- CRUD endpoints for tasks
+- Middleware for authentication
+- Test cases for each route
+
+### Milestone 4 (Nov Week 4): Testing and Local Deployment
+- Passing tests
+- Local API deployment completed
+- Swagger documentation added
+
+### Milestone 5 (Dec Week 1): Final Presentation and Documentation
+- Presentation slides
+- API documentation
+- Summary of lessons learned
+
+## Frontend
+
+The project now includes a Streamlit-based frontend for a complete user experience.
+
+### Frontend Setup
+
+1. Navigate to the frontend directory:
+```bash
+cd frontend
+```
+
+2. Install dependencies:
+```bash
+pip install -r requirements.txt
+```
+
+3. Run the Streamlit app:
+```bash
+streamlit run app.py
+```
+
+The frontend will be available at `http://localhost:8501`
+
+### Connecting Frontend to API
+
+- Ensure the FastAPI backend is running locally at `http://localhost:8000` (see Setup Instructions above).
+- The frontend automatically connects to the backend endpoints for authentication and task management.
+- Register or login through the frontend to access the task dashboard.
+
+### Frontend Features
+
+- **User Registration**: Create a new account.
+- **User Login**: Authenticate and receive a JWT token stored in session.
+- **Task Dashboard**: View, create, update, and delete tasks.
+- **Task Status Change**: Update task completion status via the update form.
+- **Logout**: Clear session and return to login.
+
+## Repository
+https://github.com/Ka1ma/Assignment-Task-Tracker-API
